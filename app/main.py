@@ -1,8 +1,8 @@
 from fastapi import FastAPI
-from app.api.routes import rag
-from app.vectordb.milvus_client import connect
+from app.core.rag_pipeline import rag_answer
 
-app = FastAPI(title="RAG Ollama Milvus")
+app = FastAPI(title="RAG Ollama FAISS")
 
-connect()
-app.include_router(rag.router)
+@app.post("/rag")
+def rag(q: str):
+    return {"answer": rag_answer(q)}

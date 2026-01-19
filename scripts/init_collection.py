@@ -13,5 +13,21 @@ fields = [
     FieldSchema("text", DataType.VARCHAR, max_length=2048)
 ]
 
-schema = CollectionSchema(fields)
-Collection(settings.COLLECTION_NAME, schema)
+schema = CollectionSchema(fields, description="RAG documents")
+
+collection = Collection(
+    name=settings.COLLECTION_NAME,
+    schema=schema
+)
+
+collection.create_index(
+    field_name="embedding",
+    index_params={
+        "metric_type": "COSINE",
+        "index_type": "HNSW",
+        "params": {"M": 8, "efConstruction": 64}
+    }
+)
+
+collection.load()   # ⭐⭐⭐ BẮT BUỘC
+print("Collection created & loaded")
